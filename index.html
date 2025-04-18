@@ -1,33 +1,111 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <title>Oyun Portalı Mega</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oyun Sitesi</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    header {
+        background: #333;
+        color: #fff;
+        padding: 10px 0;
+        text-align: center;
+    }
+    nav ul {
+        list-style: none;
+        padding: 0;
+    }
+    nav ul li {
+        display: inline;
+        margin: 0 15px;
+    }
+    nav ul li a {
+        color: #fff;
+        text-decoration: none;
+    }
+    main {
+        padding: 20px;
+    }
+    section {
+        margin-bottom: 20px;
+        background: #fff;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .oyun {
+        margin-bottom: 15px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+    }
+    .oyun h3 {
+        margin: 0;
+    }
+    iframe {
+        width: 100%;
+        height: 400px;
+        border: none;
+    }
+    footer {
+        text-align: center;
+        padding: 10px 0;
+        background: #333;
+        color: #fff;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+    }
+</style>
 </head>
 <body>
-    <h1>🎮 Oyun Portalına Hoş Geldin!</h1>
-    <div class="game-grid">
-        <a href="games/snake.html" class="game-card">🐍 Yılan Oyunu</a>
-<a href="games/flappy.html" class="game-card">🐤 Flappy Bird</a>
-<a href="games/tictactoe.html" class="game-card">❌⭕ XOX</a>
-<a href="games/2048.html" class="game-card">🔢 2048</a>
-<a href="games/tetris.html" class="game-card">🧱 Tetris</a>
-<a href="games/pong.html" class="game-card">🏓 Pong</a>
-<a href="games/minesweeper.html" class="game-card">💣 Mayın Tarlası</a>
-<a href="games/chess.html" class="game-card">♟️ Satranç</a>
-<a href="games/checkers.html" class="game-card">⬛⬜ Dama</a>
-<a href="games/sokoban.html" class="game-card">📦 Sokoban</a>
-<a href="games/memory.html" class="game-card">🧠 Hafıza Oyunu</a>
-<a href="games/connect4.html" class="game-card">🔴🟡 Connect Four</a>
-<a href="games/colormatch.html" class="game-card">🎨 Renk Eşleştirme</a>
-<a href="games/platformer.html" class="game-card">🦘 Platform Oyunu</a>
-<a href="games/brickbreaker.html" class="game-card">🧱 Tuğla Kırıcı</a>
-<a href="games/racer2p.html" class="game-card">🏎️ Yarış (2 Kişilik)</a>
-<a href="games/hextris.html" class="game-card">🧩 Hextris</a>
-<a href="games/spaceinvaders.html" class="game-card">👾 Uzaylı Avcısı</a>
-<a href="games/alienshooter.html" class="game-card">🔫 Uzay Savaşları</a>
-<a href="games/bubblepop.html" class="game-card">🫧 Baloncuk Patlat</a>
-    </div>
+<header>
+    <h1>Hoş Geldiniz!</h1>
+    <nav>
+        <ul>
+            <li><a href="#oyunlar">Oyunlar</a></li>
+            <li><a href="#hakkinda">Hakkında</a></li>
+            <li><a href="#iletisim">İletişim</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <section id="oyunlar">
+        <h2>İndirmeden Oynanan Oyunlar</h2>
+        <div class="oyun">
+            <h3>2048</h3>
+            <iframe src="https://www.mynet.com/2048" title="2048"></iframe>
+        </div>
+        <div class="oyun">
+            <h3>YILAN OYUNU</h3>
+            <iframe src="https://lagged.com/tr/p/google-snake" title="yılan oyunu"></iframe>
+        </div>
+        <div class="oyun">
+            <h3>GEOMETRY DASH</h3>
+            <iframe src="https://lagged.com/tr/p/cube-frenzy" title="Gemonatry dash"></iframe>
+        </div>
+  <div class="oyun">
+            <h3>MİENCRAFT</h3>
+            <iframe src="https://lagged.com/tr/p/classic-minecraft-online" title="Mincraft"></iframe>
+        </div>
+    </section>
+    <section id="hakkinda">
+        <h2>Hakkında</h2>
+        <p>Bu site, kullanıcıların indirmeden oynayabileceği oyunları sunmayı amaçlamaktadır.</p>
+    </section>
+    <section id="iletisim">
+        <h2>İletişim</h2>
+        <p>Bize ulaşmak için: <a href="mailto:info@oyunsitesi.com">info@oyunsitesi.com</a></p>
+    </section>
+</main>
+<footer>
+    <p>&copy; 2025 Oyun Sitesi. Tüm hakları saklıdır.</p>
+</footer>
 </body>
 </html>
