@@ -2,35 +2,10 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>XOX Oyunu</title>
-    <style>
-        body { text-align: center; font-family: sans-serif; background: #222; color: white; }
-        table { margin: 20px auto; border-collapse: collapse; }
-        td {
-            width: 80px; height: 80px;
-            border: 2px solid white;
-            font-size: 2em; cursor: pointer;
-        }
-    </style>
+    <title>❌⭕ XOX</title>
 </head>
-<body>
-    <h2>❌⭕ XOX Oyunu</h2>
-    <table id="board"></table>
-    <script>
-        const board = document.getElementById('board');
-        let current = 'X';
-        for (let i = 0; i < 3; i++) {
-            const row = board.insertRow();
-            for (let j = 0; j < 3; j++) {
-                const cell = row.insertCell();
-                cell.addEventListener('click', () => {
-                    if (cell.textContent === '') {
-                        cell.textContent = current;
-                        current = current === 'X' ? 'O' : 'X';
-                    }
-                });
-            }
-        }
-    </script>
+<body style="text-align:center; background:#111; color:white; font-family:sans-serif">
+    <h2>❌⭕ XOX</h2>
+    <p>Bu oyun yakında eklenecek veya şu anda yükleniyor.</p>
 </body>
 </html>
