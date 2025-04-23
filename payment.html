@@ -77,6 +77,28 @@
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
+
+    .download-container {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .download-container a button {
+      background: #ff5733;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: bold;
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .download-container a button:hover {
+      background: #e04e2c;
+    }
   </style>
 </head>
 <body>
@@ -101,17 +123,26 @@
     <div class="success-message" id="successMessage">
       ✅ Ödeme Başarılı! Siparişiniz hazırlanıyor.
     </div>
+
+    <div class="download-container" style="display: none;" id="downloadContainer">
+      <a href="http://localhost:8000/oyun.zip" download>
+        <button>Oyunu İndir</button>
+      </a>
+    </div>
   </div>
 
   <script>
     const form = document.getElementById('paymentForm');
     const message = document.getElementById('successMessage');
+    const downloadContainer = document.getElementById('downloadContainer');
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       // Basit doğrulama simülasyonu
       message.style.display = 'block';
       form.style.display = 'none';
+      // İndirme butonunu göster
+      downloadContainer.style.display = 'block';
     });
   </script>
 </body>
