@@ -78,9 +78,24 @@
       to { opacity: 1; transform: scale(1); }
     }
 
+    .game-selector {
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    .game-selector select {
+      width: 100%;
+      padding: 12px;
+      background: #2e2e2e;
+      color: #fff;
+      border-radius: 8px;
+      border: none;
+    }
+
     .download-container {
       text-align: center;
       margin-top: 20px;
+      display: none;
     }
 
     .download-container a button {
@@ -124,10 +139,18 @@
       ✅ Ödeme Başarılı! Siparişiniz hazırlanıyor.
     </div>
 
-    <div class="download-container" style="display: none;" id="downloadContainer">
-      <a href="http://localhost:8000/oyun.zip" download>
-        <button>Oyunu İndir</button>
-      </a>
+    <div class="game-selector" id="gameSelector" style="display: none;">
+      <label>Sepetinize Eklemek İstediğiniz Oyunları Seçin:</label>
+      <select id="gameSelect" multiple>
+        <option value="futbol">Futbol Oyunu</option>
+        <option value="valorend">Valorend</option>
+        <option value="araba">Araba Oyunu</option>
+        <option value="jump">Jump Game</option>
+      </select>
+    </div>
+
+    <div class="download-container" id="downloadContainer">
+      <div id="downloadLinks"></div>
     </div>
   </div>
 
@@ -135,14 +158,48 @@
     const form = document.getElementById('paymentForm');
     const message = document.getElementById('successMessage');
     const downloadContainer = document.getElementById('downloadContainer');
+    const gameSelector = document.getElementById('gameSelector');
+    const gameSelect = document.getElementById('gameSelect');
+    const downloadLinks = document.getElementById('downloadLinks');
 
     form.addEventListener('submit', function(e) {
       e.preventDefault();
       // Basit doğrulama simülasyonu
       message.style.display = 'block';
       form.style.display = 'none';
-      // İndirme butonunu göster
-      downloadContainer.style.display = 'block';
+      // Oyun seçimini göster
+      gameSelector.style.display = 'block';
+    });
+
+    gameSelect.addEventListener('change', function() {
+      const selectedGames = Array.from(gameSelect.selectedOptions).map(option => option.value);
+      downloadLinks.innerHTML = '';  // Önceki bağlantıları temizle
+
+      selectedGames.forEach(game => {
+        let gameUrl = '';
+        if (game === 'futbol') {
+          gameUrl = 'http://localhost:8000/futbol.zip';
+        } else if (game === 'valorend') {
+          gameUrl = 'http://localhost:8000/valorend.zip';
+        } else if (game === 'araba') {
+          gameUrl = 'http://localhost:8000/araba.zip';
+        } else if (game === 'jump') {
+          gameUrl = 'http://localhost:8000/jump.zip';
+        }
+
+        // İlgili oyun için indirme linkini ekleyelim
+        const linkContainer = document.createElement('div');
+        linkContainer.innerHTML = `
+          <a href="${gameUrl}" download>
+            <button>İndir: ${game.charAt(0).toUpperCase() + game.slice(1)}</button>
+          </a>
+        `;
+        downloadLinks.appendChild(linkContainer);
+      });
+
+      if (selectedGames.length > 0) {
+        downloadContainer.style.display = 'block'; // İndirme butonlarını göster
+      }
     });
   </script>
 </body>
