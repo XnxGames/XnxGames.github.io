@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sepet</title>
+  <style>
+    body {
+      font-family: 'Rubik', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    #cartItems {
+      max-width: 600px;
+      width: 100%;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #333;
+    }
+
+    .total {
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      color: #00ffc3;
+    }
+
+    .buy-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #00ffc3;
+      color: #000;
+      text-decoration: none;
+      border-radius: 5px;
+      text-align: center;
+      width: 100%;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .buy-button:hover {
+      background-color: #00d1a2;
+    }
+
+    button {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #e60000;
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <h1>🎮 Sepetiniz</h1>
+    <div id="cartItems"></div> <!-- Sepet elemanları burada görüntülenecek -->
+  </div>
+
+  <script>
+    const container = document.getElementById("cartItems");
+
+    function renderCart() {
+      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      container.innerHTML = "";
+      let total = 0;
+
+      if (cartItems.length === 0) {
+        container.innerHTML = "<p>🛒 Sepetiniz boş.</p>";
+        return;
+      }
+
+      cartItems.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "item";
+        div.innerHTML = `
+          <span>${item.name}</span>
+          <span>
+            ${item.price} TL
+            <button onclick="removeItem(${index})">
+              Sil
+            </button>
+          </span>
+        `;
+        container.appendChild(div);
+        total += Number(item.price); // Fiyatı sayıya çevirerek toplamla
+      });
+
+      const totalDiv = document.createElement("div");
+      totalDiv.className = "total";
+      totalDiv.textContent = `Toplam: ${total} TL`;
+      container.appendChild(totalDiv);
+
+      const button = document.createElement("a");
+      button.className = "buy-button";
+      button.href = "payment.html";
+      button.textContent = "Satın Al";
+      container.appendChild(button);
+    }
+
+    function removeItem(index) {
+      const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+      cartItems.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cartItems));
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>

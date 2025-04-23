@@ -1,0 +1,17 @@
+.go-cart-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #00ffc3;
+  color: black;
+  padding: 15px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  transition: transform 0.2s ease;
+  z-index: 1000;
+}
+.go-cart-btn:hover {
+  transform: scale(1.05);
+}

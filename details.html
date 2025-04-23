@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Oyun Detayı</title>
+  <style>
+    body {
+      font-family: 'Rubik', sans-serif;
+      background: #1a1a1a;
+      color: white;
+      padding: 40px;
+    }
+
+    .container {
+      background: #292929;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 600px;
+      margin: auto;
+      text-align: center;
+    }
+
+    a {
+      color: #00ffc3;
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      border: 1px solid #00ffc3;
+      padding: 10px 15px;
+      border-radius: 6px;
+    }
+
+    a:hover {
+      background: #00ffc3;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 id="gameTitle">Oyun Adı</h1>
+    <p id="description">Bu alanda oyunun detayları yer alacak.</p>
+    <a href="index.html">← Geri Dön</a>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const gameName = params.get("game");
+
+    const descriptions = {
+      "Futbol Oyunu": "Gerçek zamanlı maçlar, takım yönetimi ve turnuvalar içeren eğlenceli bir futbol simülasyonu.",
+      "Jump Game": "Reflekslerine güven! Zıpla, puan topla ve en yükseğe ulaş.",
+      "Araba Oyunu": "Hız tutkunlarına özel drift, yarış ve garaj özelleştirme içeren araba oyunu.",
+      "Valorend": "Strateji ve aksiyonu bir araya getiren, taktiksel FPS deneyimi."
+    };
+
+    document.getElementById("gameTitle").textContent = gameName;
+    document.getElementById("description").textContent = descriptions[gameName] || "Bu oyunun detayları yakında eklenecek.";
+  </script>
+</body>
+</html>
