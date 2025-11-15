@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XNX Games | Uygulama ve Oyun Geliştirme</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use Inter font and custom colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'xnxdark': '#00000a', // En derin karanlık, saf siyaha yakın baz
+                        'xnxgray': '#0a101d', // Kart arka planı (Daha koyu slate)
+                        'xnxtitle': '#06b6d4', // Güçlü Turkuaz Vurgu (Cyan-500)
+                        'xnxgold': '#fbbf24', // Kehribar/Altın
+                        'xnxgoldlight': '#fde047', // Parlama için daha açık altın
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    keyframes: {
+                        'pulse-ring': {
+                            '0%': { transform: 'scale(0.3)', opacity: '0.8' },
+                            '100%': { transform: 'scale(1.5)', opacity: '0' },
+                        },
+                        // Hero Bölümü için daha yoğun parıltı
+                        'hero-glow': {
+                            '0%, 100%': { 'box-shadow': '0 0 15px rgba(6, 182, 212, 0.5)' },
+                            '50%': { 'box-shadow': '0 0 40px rgba(6, 182, 212, 0.8)' },
+                        },
+                        // Dönen Kenarlık için animasyon
+                        'border-spin': {
+                            '0%': { 'background-position': '0% 50%' },
+                            '100%': { 'background-position': '100% 50%' },
+                        },
+                        'bg-pan': {
+                            '0%': { 'background-position': '0% 50%' },
+                            '100%': { 'background-position': '100% 50%' },
+                        }
+                    },
+                    animation: {
+                        'pulse-ring': 'pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'hero-glow': 'hero-glow 5s ease-in-out infinite alternate',
+                        'border-spin': 'border-spin 8s linear infinite',
+                        'bg-pan': 'bg-pan 30s ease infinite alternate',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Body Background - Deep Space Theme with Animated Glow */
+        body {
+            background-color: #00000a; /* Saf siyaha yakın arka plan */
+            color: white;
+            scroll-behavior: smooth;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background Glow Effect (Kozmik Parıltı) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            /* Daha parlak ve belirgin parıltı gradyanları */
+            background: radial-gradient(circle at 15% 15%, rgba(6, 182, 212, 0.15) 0%, rgba(10, 16, 29, 0) 60%),
+                        radial-gradient(circle at 85% 85%, rgba(251, 191, 36, 0.08) 0%, rgba(10, 16, 29, 0) 60%);
+            opacity: 0.8;
+            animation: bg-pan 30s ease infinite alternate;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Sticky Header - Blur Effect */
+        #header {
+            backdrop-filter: blur(12px); /* Daha güçlü bulanıklık efekti */
+            background-color: rgba(0, 0, 10, 0.85); /* Daha koyu yarı saydam arka plan */
+        }
+        
+        /* Hero Section Styling - Yeni Glow Animasyonu */
+        #hero {
+            animation: hero-glow 5s ease-in-out infinite alternate;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Hero Title Text Shadow */
+        #hero h1 {
+            text-shadow: 0 0 5px #06b6d4, 0 0 15px #06b6d4; /* Neon efekti */
+        }
+
+        /* Ürün Kartı: Dinamik Gradyan Kenarlık Sarıcı */
+        .gradient-border-wrap {
+            position: relative;
+            background: #0a101d; /* Kart arka plan rengi */
+            border-radius: 1.5rem; /* Daha yuvarlak köşe */
+            padding: 2px; /* Kenarlık kalınlığı */
+            overflow: hidden;
+        }
+        .gradient-border-wrap:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            /* Dönen renkler */
+            background: linear-gradient(45deg, #06b6d4, #00ffc4, #fbbf24, #06b6d4);
+            background-size: 400% 400%;
+            border-radius: 1.5rem;
+            opacity: 0.2; /* Başlangıçta hafifçe görünen kenarlık */
+            transition: opacity 0.5s;
+            z-index: 1;
+        }
+        .gradient-border-wrap:hover:before {
+            animation: border-spin 8s linear infinite;
+            opacity: 1; /* Hover'da kenarlık tamamen belirginleşir ve döner */
+        }
+
+        /* Kart İçeriği */
+        .gradient-border-wrap > .product-card {
+            background: #0a101d;
+            border: none; /* Statik kenarlığı kaldır */
+            position: relative;
+            z-index: 2; /* İçerik önde olsun */
+            transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .gradient-border-wrap:hover > .product-card {
+            transform: translateY(-8px) scale(1.02); /* Hafifçe daha az agresif yükselme */
+            box-shadow: 0 30px 50px -10px rgba(6, 182, 212, 0.5);
+        }
+        .gradient-border-wrap:active > .product-card {
+            transform: translateY(-2px); /* Basıldığında geri çökme */
+            box-shadow: 0 10px 20px rgba(6, 182, 212, 0.3);
+        }
+
+
+        /* Animation Classes (Staggered Fade In Up - Yaylanma) */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(80px); /* Başlangıçta daha alttan başla */
+            transition: opacity 1s ease-out, transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            will-change: opacity, transform;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Icon Color and Animation */
+        .icon {
+            width: 52px;
+            height: 52px;
+            color: #06b6d4;
+            transition: transform 0.6s;
+        }
+        .gradient-border-wrap:hover .icon {
+            transform: rotateY(360deg) scale(1.2); /* Daha belirgin ikon animasyonu */
+        }
+
+        /* Modal Spring Animation */
+        .modal-overlay {
+            z-index: 9999;
+            background-color: rgba(0, 0, 0, 0.98);
+            backdrop-filter: blur(15px);
+        }
+        .modal-content {
+            transform: scale(0.5);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.5s ease-out; /* Güçlü yaylanma */
+        }
+        .modal-open .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* PRO Tag Glow */
+        .pro-tag {
+            box-shadow: 0 0 10px #fbbf24;
+            background-color: #fbbf24;
+            transition: box-shadow 0.5s;
+        }
+        .gradient-border-wrap:hover .pro-tag {
+            box-shadow: 0 0 20px #fde047; /* Hover'da daha parlak glow */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navigation Bar -->
+    <header id="header" class="sticky top-0 z-50 shadow-2xl border-b border-slate-700/30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <a href="#" class="text-3xl font-extrabold text-xnxtitle tracking-wider transition-colors duration-300 hover:text-white">XNX <span class="text-white">Games</span></a>
+            <nav class="space-x-4">
+                <a href="#oyunlar" class="text-slate-300 hover:text-xnxtitle hover:underline transition duration-200 text-lg hidden sm:inline">Oyunlar</a>
+                <a href="#uygulamalar" class="text-slate-300 hover:text-xnxtitle hover:underline transition duration-200 text-lg hidden sm:inline">Uygulamalar</a>
+                <a href="#iletisim" class="bg-xnxtitle text-xnxdark px-4 py-2 rounded-lg font-bold hover:bg-cyan-400 transition duration-200 shadow-xl active:scale-95">İletişim</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24">
+
+        <!-- Hero Section -->
+        <section id="hero" class="text-center py-20 bg-xnxgray rounded-3xl shadow-2xl border border-slate-700/50 animate-on-scroll mb-20">
+            <h1 class="text-5xl sm:text-7xl font-extrabold mb-4 leading-tight text-white">
+                Hayal Gücünden Dijital Dünyaya
+            </h1>
+            <p class="text-xl sm:text-2xl text-slate-400 mb-8 max-w-3xl mx-auto">
+                XNX Games, mobil oyun ve uygulama geliştirmede yaratıcılığı ve kaliteyi bir araya getiriyor. Dijital deneyiminizi zenginleştiren ürünlerimizi keşfedin!
+            </p>
+            
+            <div class="cta-button-container">
+                <div class="cta-ring w-full h-full"></div> <!-- CTA Pulse Ring -->
+                <a href="#oyunlar" class="relative bg-xnxtitle text-xnxdark px-8 py-4 rounded-full font-bold text-xl uppercase tracking-wider hover:bg-cyan-400 transition duration-300 transform hover:scale-105 shadow-xl ring-4 ring-xnxtitle/50 active:scale-95">
+                    Ürünlerimizi İncele
+                </a>
+            </div>
+        </section>
+
+        <!-- Oyunlar (Games) Section -->
+        <section id="oyunlar" class="pt-12">
+            <h2 class="text-4xl font-bold text-center mb-16 text-xnxtitle border-b-4 border-xnxtitle pb-2 inline-block mx-auto transform hover:scale-105 transition duration-300">
+                Oyunlar
+            </h2>
+
+            <!-- data-delay kullanımı ile kademeli animasyon (staggering) sağlanır -->
+            <!-- Oyunlar bölümünde sadece "Car Parking" oyunu kaldı. Diğer kartlar kaldırıldı. -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12" id="game-cards-container">
+
+                <!-- Car Parking Card -->
+                <div class="gradient-border-wrap animate-on-scroll" data-delay="0">
+                    <div class="product-card p-8 rounded-2xl shadow-lg flex flex-col items-center text-center" onclick="showProductDetails('carParking')">
+                        <div class="icon-container mb-6">
+                            <!-- Car Icon (Placeholder SVG) -->
+                            <svg class="icon mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M7 17l4.3-4.721c.214-.235.53-.33.834-.265l2.673.535a.8.8 0 0 1 .69.789v2.5a2 2 0 0 0 2 2h0a2 2 0 0 0 2-2v-2.5a.8.8 0 0 1 .69-.789l2.673-.535c.304-.065.62-.03.834.265L22 17"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-3 text-white">Car Parking</h3>
+                        <p class="text-slate-400 mb-6 flex-grow">Gerçekçi fizik motoru ve zorlu park görevleri ile becerilerinizi test edin. Detaylı araç modellemeleri ve geniş haritalar.</p>
+                        <div class="mt-4 w-full">
+                            <span class="text-4xl font-extrabold text-emerald-400 block mb-3">3.59 TL</span>
+                            <button disabled class="w-full bg-slate-700 text-slate-300 py-4 rounded-xl font-bold cursor-not-allowed transition duration-300 hover:shadow-inner active:scale-98">
+                                Test Aşamasında
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <!-- Uygulamalar (Applications) Section -->
+        <section id="uygulamalar" class="pt-24">
+            <h2 class="text-4xl font-bold text-center mb-16 text-xnxtitle border-b-4 border-xnxtitle pb-2 inline-block mx-auto transform hover:scale-105 transition duration-300">
+                Uygulamalar
+            </h2>
+
+            <!-- data-delay kullanımı ile kademeli animasyon (staggering) sağlanır -->
+            <!-- Gizli Proje X buraya 4. kart olarak eklendi. -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12" id="app-cards-container">
+
+                <!-- Ezan Asistanı Card (Free) -->
+                <div class="gradient-border-wrap animate-on-scroll" data-delay="0">
+                    <div class="product-card p-8 rounded-2xl shadow-lg flex flex-col items-center text-center" onclick="showProductDetails('ezanAsistani')">
+                        <div class="icon-container mb-6">
+                            <!-- Moon/Star Icon (Placeholder SVG for Ezan) -->
+                            <svg class="icon mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 12 2zM12 22a3.5 3.5 0 1 0 3.5-3.5A3.5 3.5 0 0 0 12 22zM2 12a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 2 12zM22 12a3.5 3.5 0 1 0-3.5-3.5A3.5 3.5 0 0 0 22 12zM15.5 15.5l-3.5-3.5 3.5-3.5"/><path d="M12 12l3.5 3.5"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-3 text-white">Ezan Asistanı</h3>
+                        <p class="text-slate-400 mb-6 flex-grow">Namaz vakitlerini doğru ve zamanında takip edin. Sade arayüzü ve kullanışlı özellikleriyle günlük yardımcınız.</p>
+                        <div class="mt-4 w-full">
+                            <span class="text-4xl font-extrabold text-emerald-400 block mb-3">BEDAVA</span>
+                            <button disabled class="w-full bg-slate-700 text-slate-300 py-4 rounded-xl font-bold cursor-not-allowed transition duration-300 hover:shadow-inner active:scale-98">
+                                Test Aşamasında
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ezan Asistanı Pro Card (Paid) -->
+                <div class="gradient-border-wrap animate-on-scroll" data-delay="1">
+                    <div class="product-card p-8 rounded-2xl shadow-lg flex flex-col items-center text-center relative" onclick="showProductDetails('ezanAsistaniPro')">
+                        <span class="pro-tag absolute top-0 right-0 text-xnxdark text-sm font-bold px-4 py-2 rounded-bl-lg rounded-tr-xl shadow-lg transform translate-y-[-1px] translate-x-[1px]">PRO</span>
+                        <div class="icon-container mb-6">
+                            <!-- Moon/Star Icon (Placeholder SVG for Ezan) -->
+                            <svg class="icon mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 12 2zM12 22a3.5 3.5 0 1 0 3.5-3.5A3.5 3.5 0 0 0 12 22zM2 12a3.5 3.5 0 1 0 3.5 3.5A3.5 3.5 0 0 0 2 12zM22 12a3.5 3.5 0 1 0-3.5-3.5A3.5 3.5 0 0 0 22 12zM15.5 15.5l-3.5-3.5 3.5-3.5"/><path d="M12 12l3.5 3.5"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-3 text-white">Ezan Asistanı Pro</h3>
+                        <p class="text-slate-400 mb-6 flex-grow">Reklamsız deneyim, gelişmiş kıble bulucu ve kişiselleştirilebilir bildirim sesleri ile tam özellikli paket.</p>
+                        <div class="mt-4 w-full">
+                            <span class="text-4xl font-extrabold text-xnxgold block mb-3">10.00 TL</span>
+                            <button disabled class="w-full bg-slate-700 text-slate-300 py-4 rounded-xl font-bold cursor-not-allowed transition duration-300 hover:shadow-inner active:scale-98">
+                                Test Aşamasında
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FitAdım Card (Free) -->
+                <div class="gradient-border-wrap animate-on-scroll" data-delay="2">
+                    <div class="product-card p-8 rounded-2xl shadow-lg flex flex-col items-center text-center" onclick="showProductDetails('fitAdim')">
+                        <div class="icon-container mb-6">
+                            <!-- Footstep Icon (Placeholder SVG for FitAdım) -->
+                            <svg class="icon mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 20l4-16"/><path d="M21 16H3a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h18a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2z"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-3 text-white">FitAdım</h3>
+                        <p class="text-slate-400 mb-6 flex-grow">Günlük adım sayınızı, yaktığınız kaloriyi ve mesafenizi takip edin. Sağlıklı bir yaşam için motivasyon kaynağınız.</p>
+                        <div class="mt-4 w-full">
+                            <span class="text-4xl font-extrabold text-emerald-400 block mb-3">BEDAVA</span>
+                            <button disabled class="w-full bg-slate-700 text-slate-300 py-4 rounded-xl font-bold cursor-not-allowed transition duration-300 hover:shadow-inner active:scale-98">
+                                Test Aşamasında
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gizli Proje X Placeholder (Uygulamalara Taşındı) -->
+                <div class="gradient-border-wrap animate-on-scroll" data-delay="3">
+                    <div class="product-card p-8 rounded-2xl shadow-lg flex flex-col items-center text-center opacity-50 cursor-default" onclick="showProductDetails('gizliProjeX')">
+                        <div class="icon-container mb-6">
+                            <!-- Lock Icon (Placeholder SVG) -->
+                            <svg class="icon mx-auto" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        </div>
+                        <h3 class="text-3xl font-bold mb-3 text-white">Gizli Proje X</h3>
+                        <p class="text-slate-500 mb-6 flex-grow">Çok yakında duyurulacak yeni mobil uygulama projemiz için takipte kalın. Verimlilik ve yenilikçi kullanıcı deneyimi sizi bekliyor.</p>
+                        <div class="mt-4 w-full">
+                            <span class="text-4xl font-extrabold text-slate-600 block mb-3">ÇOK YAKINDA</span>
+                            <button disabled class="w-full bg-slate-800 text-slate-600 py-4 rounded-xl font-bold cursor-not-allowed">
+                                Takip Et
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer id="iletisim" class="bg-xnxdark border-t border-slate-700/30 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-on-scroll" data-delay="0">
+            <h4 class="text-3xl font-bold mb-4 text-xnxtitle">Bize Ulaşın</h4>
+            <p class="text-slate-400 mb-4">Tüm öneri, görüş ve işbirliği talepleriniz için bize e-posta yoluyla ulaşabilirsiniz.</p>
+            <p class="text-2xl font-medium text-white mb-8">
+                E-posta: <a href="mailto:xnxgamesdev@gmail.com" class="text-xnxtitle hover:text-cyan-400 hover:underline transition duration-200">xnxgamesdev@gmail.com</a>
+            </p>
+            <div class="border-t border-slate-700/30 pt-6">
+                <p class="text-slate-500 text-sm">&copy; 2025 XNX Games. Tüm Hakları Saklıdır. | Geliştirme Aşaması</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ÜRÜN DETAY MODALI -->
+    <div id="productModal" class="modal-overlay fixed inset-0 hidden items-center justify-center p-4">
+        <div class="modal-content bg-xnxgray w-full max-w-lg mx-auto rounded-3xl shadow-2xl p-8 border border-slate-600">
+            <div class="flex justify-between items-start mb-6">
+                <h3 id="modalTitle" class="text-4xl font-extrabold text-xnxtitle">Ürün Adı</h3>
+                <button onclick="closeProductModal()" class="text-slate-400 hover:text-white transition duration-200 p-2 rounded-full hover:bg-slate-700">
+                    <!-- Close Icon (X) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Ürün Resmi -->
+            <img id="modalImage" src="" alt="Ürün Ekran Görüntüsü" class="w-full h-auto rounded-xl mb-6 object-cover border-4 border-slate-700 shadow-xl" onerror="this.onerror=null; this.src='https://placehold.co/400x300/e3342f/ffffff?text=RES%C4%B0M+Y%C3%9CKLENEMED%C4%B0'; this.alt='Resim yüklenemedi. Lütfen dosyanın aynı klasörde olduğundan emin olun.';">
+
+            <p id="modalDescription" class="text-slate-300 mb-6 leading-relaxed text-lg">Ürün açıklaması burada yer alacak...</p>
+
+            <div class="flex justify-between items-center border-t border-slate-700 pt-6">
+                <span id="modalPrice" class="text-5xl font-extrabold">Fiyat</span>
+                <button disabled class="bg-slate-700 text-slate-300 px-8 py-4 rounded-xl font-bold cursor-not-allowed transition duration-300 active:scale-98">
+                    Test Aşamasında
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Ürün verilerini içeren JavaScript objesi
+        const products = {
+            carParking: {
+                title: "Car Parking",
+                price: "3.59 TL",
+                description: "Gerçekçi fizik motoru ve zorlu park görevleri ile becerilerinizi test edin. Detaylı araç modellemeleri ve geniş haritalar. Bu oyun, mobil platformda en gerçekçi sürüş deneyimini sunmayı hedefliyor.",
+                imageFile: "carparking.png",
+                imageUrl: "carparking.png",
+                isPro: false
+            },
+            // Survival Challenge oyunu kaldırıldı.
+            
+            ezanAsistani: {
+                title: "Ezan Asistanı",
+                price: "BEDAVA",
+                description: "Namaz vakitlerini doğru ve zamanında takip edin. Sade arayüzü ve kullanışlı özellikleriyle günlük yardımcınız. Diyanet İşleri Başkanlığı verileriyle uyumlu zaman bilgileri.",
+                imageFile: "ezanasistani.png",
+                imageUrl: "ezanasistani.png",
+                isPro: false
+            },
+            ezanAsistaniPro: {
+                title: "Ezan Asistanı Pro",
+                price: "10.00 TL",
+                description: "Reklamsız deneyim, gelişmiş kıble bulucu ve kişiselleştirilebilir bildirim sesleri ile tam özellikli paket. Uygulamanın tüm özelliklerini sınırsızca kullanın.",
+                imageFile: "ezanasistanipro.png",
+                imageUrl: "ezanasistanipro.png",
+                isPro: true
+            },
+            fitAdim: {
+                title: "FitAdım",
+                price: "BEDAVA",
+                description: "Günlük adım sayınızı, yaktığınız kaloriyi ve mesafenizi takip edin. Sağlıklı bir yaşam için motivasyon kaynağınız. Pil dostu ve hassas sensör kullanımı.",
+                imageFile: "fitadim.png",
+                imageUrl: "fitadim.png",
+                isPro: false
+            },
+            // Gizli Proje X uygulamalara eklendi.
+            gizliProjeX: {
+                title: "Gizli Proje X",
+                price: "ÇOK YAKINDA",
+                description: "Çok yakında duyurulacak yeni mobil uygulama projemiz için takipte kalın. Verimlilik ve yenilikçi kullanıcı deneyimi sizi bekliyor.",
+                imageFile: "gizliprojex.png",
+                imageUrl: "gizliprojex.png",
+                isPro: false
+            }
+        };
+
+        const modal = document.getElementById('productModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalPrice = document.getElementById('modalPrice');
+        const modalImage = document.getElementById('modalImage');
+
+        /**
+         * Belirtilen ürün ID'sine ait detayları modalda gösterir.
+         * @param {string} productId - Ürünün benzersiz kimliği (Örn: 'carParking').
+         */
+        function showProductDetails(productId) {
+            const product = products[productId];
+            if (!product) {
+                console.error("Ürün bulunamadı:", productId);
+                return;
+            }
+
+            // Modal içeriğini güncelle
+            modalTitle.textContent = product.title;
+            modalDescription.textContent = product.description;
+            
+            // Fiyat rengini Pro veya normal ürüne göre ayarla
+            modalPrice.textContent = product.price;
+            modalPrice.className = product.isPro 
+                ? 'text-5xl font-extrabold text-xnxgold' 
+                : 'text-5xl font-extrabold text-emerald-400';
+                
+            // Eğer fiyat "ÇOK YAKINDA" ise rengi slate yap
+            if (product.price === "ÇOK YAKINDA") {
+                 modalPrice.className = 'text-5xl font-extrabold text-slate-400';
+            }
+                
+            modalImage.src = product.imageUrl;
+            modalImage.alt = product.title + " Ekran Görüntüsü";
+            
+            // Modalı göster
+            modal.classList.remove('hidden');
+            modal.classList.add('flex', 'modal-open');
+        }
+
+        /**
+         * Detay modalını kapatır.
+         */
+        function closeProductModal() {
+            modal.classList.remove('flex', 'modal-open');
+            modal.classList.add('hidden');
+        }
+
+        // Modal dışına tıklanarak kapatma işlevi
+        modal.addEventListener('click', (e) => {
+            if (e.target.id === 'productModal') {
+                closeProductModal();
+            }
+        });
+
+        // ===================================================
+        // Intersection Observer for Scroll Animations (Kademeli Görünme)
+        // ===================================================
+
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // %10'u göründüğünde tetikle
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const delay = parseInt(entry.target.getAttribute('data-delay') || '0');
+                    // Kademeli animasyon için delay uygulanır
+                    setTimeout(() => {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); 
+                    }, delay * 100); // 100ms gecikme
+                }
+            });
+        }, observerOptions);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Bireysel kartları ve footer'ı seç (data-delay attribute'u olanlar)
+            const cards = document.querySelectorAll('.gradient-border-wrap, #iletisim');
+
+            // Hero bölümü hemen görünür (sayfa yüklendiğinde)
+            const heroSection = document.getElementById('hero');
+            if (heroSection) {
+                heroSection.classList.add('is-visible');
+            }
+
+            // Kademeli animasyon için tüm kartları ve footer'ı gözlemle
+            cards.forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Oyunlar ve Uygulamalar başlıklarını da gözlemle
+            const titles = document.querySelectorAll('section h2');
+            titles.forEach(el => observer.observe(el));
+        });
+
+    </script>
+
+</body>
+</html>
