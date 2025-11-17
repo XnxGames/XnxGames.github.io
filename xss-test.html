@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>XSS Test</title>
+    <style>
+        body {
+            background: black;
+            color: #00ff00;
+            font-family: monospace;
+            padding: 20px;
+        }
+
+        #output {
+            margin-top: 20px;
+            padding: 20px;
+            background: #111;
+            border: 1px solid #0f0;
+        }
+
+        /* Hack ekranı efekti */
+        @keyframes glitch {
+            0% { text-shadow: 2px 2px red; }
+            50% { text-shadow: -2px -2px blue; }
+            100% { text-shadow: 2px -2px red; }
+        }
+
+        .glitch {
+            font-size: 32px;
+            animation: glitch 0.1s infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <h1 class="glitch">Bu Site XNX tarafından Hacklenmiştir</h1>
+
+    <p>maalesef siten elimizde</p>
+
+    <form>
+        <input id="input" type="text" placeholder="Buraya bir şey yaz..." style="width: 300px;">
+        <button type="button" onclick="runXSS()">Gönder</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        function runXSS() {
+            // BİLEREK XSS AÇIĞI! (güvenlik testleri için)
+            const txt = document.getElementById("input").value;
+            document.getElementById("output").innerHTML = txt;
+
+            // Hack popup efekti
+            if (txt.includes("<script>")) {
+                setTimeout(() => {
+                    alert("HACKLENDİN! 😈 (şaka tabii, XSS testindesin)");
+                }, 500);
+            }
+        }
+    </script>
+
+</body>
+</html>
